@@ -8,8 +8,9 @@ const db = require('../utils/sql')
 // 获取所有评论
 router.get('/get', async (req, res) => {
     try {
-        let { couponId } = req.query
-        let commentList = await db('select * from tour_comment where comment_coupon_id=' + couponId)
+        const { couponId } = req.query
+        // let commentList = await db('select * from tour_comment where comment_coupon_id=' + couponId)
+        const commentList = await db('select comment_user_phone, comment_star, comment_content from tour_comment where comment_coupon_id=' + couponId);
         res.json({
             code: 0,
             data: commentList,
@@ -35,7 +36,7 @@ router.post('/publish', async (req, res) => {
         })
     }
 
-    let item = await db(`select status from tour_coupon_user where coupon_id=${couponId} and user_id=${userId}`)
+    let [item] = await db(`select status from tour_coupon_user where coupon_id=${couponId} and user_id=${userId}`)
     if(!item){
         res.json({
             code:-1,
@@ -44,33 +45,15 @@ router.post('/publish', async (req, res) => {
         })
     }
 
-    if(item.status === 0){
-        let userItem = await db(`select user_phone from tour_user where id=${userId}`)
-        if(!userItem){
-            return res.json({
-                code:-1,
-                data: null,
-                message: '用户不存在'
-            })
-        }else{
-            await db(`insert into tour_comment set comment_user_phone = ${userItem.user_phone}, comment_star=${starGrade},
-            comment_content=${commentContent}, comment_time=${new Date().getTime()}, comment_coupon_id=${couponId} `)
-            let result = await db(`update tour_coupon_user set status=1 where coupon_id=${couponId} and user_id=${userId}`)
-            res.json({
-                code: 0,
-                data: null,
-                message: '评论成功'
-            })
-        }
-
-        await db
-    }else{
-        res.json({
-            code: -1,
-            data: null,
-            message: '已经发布过评论了'
-        })
-    }
+    if (item.status === 0) {
+        const [userItem] = await db('select user_phone from tour_user where id = ' + userId);
+        if (!userItem) return res.json({ code: -1, data: null, message: '用户不存在' });
+        await db('insert into tour_comment set comment_user_phone="' + userItem.user_phone + '", comment_star="' + starGrade + '", comment_content="' + commentContent + '", comment_time="' + new Date().getTime() + '", comment_coupon_id="' + couponId + '"');
+        const result = await db(`update tour_coupon_user set status=1 where coupon_id=${couponId} and user_id=${userId}`);
+        res.json({ code: 0, data: null, message: '评论成功' });
+      } else {
+        res.json({ code: -1, data: null, message: '已经发布过评论了' });
+      }
 })
 
 module.exports = router;

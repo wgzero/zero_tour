@@ -10,8 +10,9 @@ router.post('/loginForm', async (req, res) => {
     const phone = loginMsg.phone
     const pwd = md5.update(loginMsg.pwd).digest('hex')
     try {
-        const result = await db('select id from tour_user where user_phone="' + phone + '" and user_pwd "' + pwd +'"')
-        if(!result){
+        const result = await db('select id from tour_user where user_phone="' + phone + '" and user_pwd="' + pwd +'"')
+        const [item] = result
+        if(!item){
             res.json({
                 code: -1,
                 data: null,
@@ -19,8 +20,8 @@ router.post('/loginForm', async (req, res) => {
             })
         }else{
             res.json({
-                code: -1,
-                data: result.id,
+                code: 0,
+                data: item.id,
                 message: ''
             })
         }
@@ -80,7 +81,7 @@ router.post('/getPhoneCode', async (req, res) => {
     let msg = req.body
     let phone = msg.phone
     try {
-        let data = await db('select id from tour_user where user_phone="' + phone + '"')
+        let [data] = await db('select id from tour_user where user_phone="' + phone + '"')
         if(!data){
             res.json({
                 code: -1,
@@ -90,13 +91,13 @@ router.post('/getPhoneCode', async (req, res) => {
         }else{
             // 模拟获取手机验证码
             let code = ''
-            for(let i=0; i < 6; i++){
+            for(let i=0; i < 6; i+=1){
                 code+=Math.floor(Math.random() * 10)
 
             }
             res.json({
                 code: 0,
-                data: null,
+                data: code,
                 message: ''
             })
         }

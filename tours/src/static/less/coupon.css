@@ -1,0 +1,149 @@
+@charset "UTF-8";
+/**
+ * Description: 优惠券列表公用LESS
+ */
+.coupon-list-wraper a {
+  display: block;
+  position: relative;
+  height: 95px;
+  margin-bottom: 10px;
+  background-repeat: no-repeat;
+  background-position: left top;
+}
+.coupon-list-wraper a.use-discount-bg {
+  background-image: url("../images/discountbg.png");
+  background-size: 100% 100%;
+}
+.coupon-list-wraper a.use-discount-bg .shop-active {
+  position: absolute;
+  top: 13px;
+  right: 4px;
+  height: 70px;
+}
+.coupon-list-wraper a.used-bg {
+  background-image: url("../images/usebg.png");
+  background-size: 100% 103%;
+}
+.coupon-list-wraper a.past-bg {
+  background-image: url("../images/pastduebg.png");
+  background-size: 100% 103%;
+}
+.coupon-list-wraper a .shop-ico {
+  position: absolute;
+  left: 8px;
+  top: 13px;
+  width: 105px;
+  height: 70px;
+}
+.coupon-list-wraper a .shop-ico img {
+  border: 1px solid #e2e2e2;
+}
+.coupon-list-wraper a .shop-intro {
+  position: absolute;
+  left: 118px;
+  top: 13px;
+  width: 100%;
+}
+.coupon-list-wraper a .shop-intro .shop-title {
+  font-size: 15px;
+  color: #4d4d4d;
+}
+.coupon-list-wraper a .shop-intro .shop-discounts {
+  font-size: 12px;
+  color: #b3b3b3;
+}
+.coupon-list-wraper a .shop-intro .shop-price span {
+  display: inline-block;
+  height: 100%;
+  line-height: 22px;
+  vertical-align: middle;
+}
+.coupon-list-wraper a .shop-intro .shop-price span.condition {
+  padding: 0 3px;
+  background-color: #fff4ec;
+  font-size: 15px;
+  color: #f23030;
+}
+.coupon-list-wraper a .shop-active {
+  position: absolute;
+  top: 45px;
+  right: 4px;
+  height: 70px;
+}
+.coupon-list-wraper a .shop-active p {
+  height: 18px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 500;
+  color: #f23030;
+}
+.coupon-list-wraper a .shop-active .use-discount {
+  background-image: url("../images/littlebtn.png");
+}
+.coupon-list-wraper a .shop-active .used {
+  background-image: url("../images/usebtn.png");
+}
+.coupon-list-wraper a .shop-active .past {
+  background-image: url("../images/pastduebtn.png");
+}
+.coupon-list-wraper a .shop-active-canuse {
+  background-image: url("../images/circlered.png");
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 47px 35px;
+}
+.use-discount,
+.used,
+.past {
+  display: block;
+  height: 33px;
+  margin: 10px auto 0 auto;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 54px 33px;
+}
+@media only screen and (min-width: 320px) and (max-width: 374px) {
+  .shop-price {
+    max-width: 125px;
+  }
+  .shop-active {
+    width: 50px;
+  }
+  .use-discount,
+  .used,
+  .past {
+    width: 50px;
+    height: 30px;
+    background-size: 50px 33px;
+  }
+}
+@media only screen and (min-width: 375px) and (max-width: 413px) {
+  .shop-price {
+    max-width: 156px;
+  }
+  .shop-active {
+    width: 60px;
+  }
+}
+@media only screen and (min-width: 414px) and (max-width: 767px) {
+  .shop-price {
+    max-width: 185px;
+  }
+  .shop-active {
+    width: 65px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .shop-price {
+    max-width: 360px;
+  }
+  .shop-active {
+    width: 107px;
+    background-size: 60px 45px;
+  }
+  .shop-active p {
+    height: 20px;
+    line-height: 42px;
+  }
+}

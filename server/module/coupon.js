@@ -7,8 +7,9 @@ const db = require('../utils/sql')
 router.get('/record', async (req, res) => {
     try {
         let { userId } = req.query
-        let data = await db(`select count(coupon_name) as num, coupon_type from tour_coupon where id in 
-        (select coupon_id from tour_coupon_user where user_id=${userId}) group by coupon_type)`)
+        // let data = await db(`select count(coupon_name) as num, coupon_type from tour_coupon where id in 
+        // (select coupon_id from tour_coupon_user where user_id=${userId}) group by coupon_type)`)
+        const data = await db('select count(coupon_name) as num, coupon_type from tour_coupon where id in (select coupon_id from tour_coupon_user where user_id="' + userId + '") group by coupon_type');
         res.json({
             code: 0,
             data,
@@ -26,9 +27,11 @@ router.get('/record', async (req, res) => {
 router.get('/received', async (req, res) => {
     try {
         let { userId, type } = req.query
-        let receivedCouponList = await db(`select a.id, a.coupon_name, a.coupon_explain, a.coupon_ico_path, a.coupon_received_num,
-        b.status from tour_coupon as a right join tour_coupon_user as b on a.id=b.coupon_id where a.coupon_status=0 and a.coupon_type=${type}
-        and a.id in (select coupon_id from tour_coupon_user where user_id=${userId}) and b.user_id=${userId}`)
+        // let receivedCouponList = await db(`select a.id, a.coupon_name, a.coupon_explain, a.coupon_ico_path, a.coupon_received_num,
+        // b.status from tour_coupon as a right join tour_coupon_user as b on a.id=b.coupon_id where a.coupon_status=0 and a.coupon_type=${type}
+        // and a.id in (select coupon_id from tour_coupon_user where user_id=${userId}) and b.user_id=${userId}`)
+        const receivedCouponList = await db('select a.id, a.coupon_name, a.coupon_explain, a.coupon_ico_path, a.coupon_recived_num, b.status from tour_coupon as a right join tour_coupon_user as b on a.id=b.coupon_id where a.coupon_status=0 and a.coupon_type="' + type + '" and a.id in (select coupon_id from tour_coupon_user where user_id="' + userId + '") and b.user_id="' + userId + '"');
+    
         res.json({
             code: 0,
             data: receivedCouponList,
@@ -46,7 +49,7 @@ router.get('/received', async (req, res) => {
 router.get('/detail', async (req, res) => {
     try {
         let { id } = req.query
-        let data = await db(`select a.coupon_name, a.coupon_explain, a.coupon_starttime, a.coupon_endtime, a.coupon_ico_path, b.comment_content,
+        let [data] = await db(`select a.coupon_name, a.coupon_explain, a.coupon_starttime, a.coupon_endtime, a.coupon_ico_path, b.comment_content,
         b.comment_star, b.comment_user_phone from tour_coupon as a left join tour_comment as b on a.id=b.comment_coupon_id where a.id=${id}`)
         if (data) {
             res.json({
@@ -73,7 +76,7 @@ router.get('/detail', async (req, res) => {
 router.post('/receive', async (req, res) => {
     try {
         let { couponId, userId } = req.body
-        let id = await db(`select id from tour_coupon_user where coupon_id=${couponId} and user_id=${userId}`)
+        let [id] = await db(`select id from tour_coupon_user where coupon_id=${couponId} and user_id=${userId}`)
         if (id) {
             res.json({
                 code: -1,
@@ -81,9 +84,11 @@ router.post('/receive', async (req, res) => {
                 message: '已经领取过了'
             })
         } else {
-            let { insertId } = await db(`insert into tour_coupon_user set coupon_id=${couponId}, user_id=${userId}`)
+            // let { insertId } = await db(`insert into tour_coupon_user set coupon_id=${couponId}, user_id=${userId}`)
+            const { insertId } = await db('insert into tour_coupon_user set coupon_id="' + couponId + '", user_id="' + userId + '"');
             if (insertId) {
-                let data = await db(`update tour_coupon set coupon_received_num=coupon_received_num+1 where id= ${couponId}`)
+                // let data = await db(`update tour_coupon set coupon_received_num=coupon_received_num+1 where id= ${couponId}`)
+                const data = await db('update tour_coupon set coupon_recived_num=coupon_recived_num+1 where id="' + couponId + '"');
                 if (data) {
                     res.json({
                         code: 0,

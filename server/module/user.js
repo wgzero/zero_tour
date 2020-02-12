@@ -8,7 +8,7 @@ const multer = require('../utils/multer')
 router.get('/info', async (req, res) => {
     try {
         const { id } = req.query
-        const data = await db('select * from tour_user where id="' + id + '"')
+        const [data] = await db('select * from tour_user where id="' + id + '"')
         if (data) {
             res.json({
                 code: 0,
@@ -32,7 +32,7 @@ router.get('/info', async (req, res) => {
 })
 
 // 修改用户名
-router.post('/updateUserName', async (req, res) => {
+router.post('/changeUserName', async (req, res) => {
     try {
         let msg = req.body;
         let userId = msg.userId;
@@ -62,10 +62,11 @@ router.post('/updateUserName', async (req, res) => {
 
 
 // 修改性别
-router.post('/updateUserSex', async (req, res) => {
+router.post('/changeUserSex', async (req, res) => {
     try {
-        let msg = req.body;
-        let { userId, sex } = msg;
+        const msg = req.body;
+        const userId = msg.userId;
+        const sex = msg.sex;
         let data = await db('update tour_user set user_sex="' + sex + '"where id="' + userId + '"')
         if (data) {
             res.json({
@@ -90,7 +91,7 @@ router.post('/updateUserSex', async (req, res) => {
 })
 
 // 修改密码
-router.post('/updatePassword', async (req, res) => {
+router.post('/resetPassword', async (req, res) => {
     try {
         let md5 = crypto.createHash('md5')
         let msg = req.body;
